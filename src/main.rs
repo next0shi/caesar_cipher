@@ -22,7 +22,7 @@ fn encode(message: &str, shift: i32) -> String {
 }
 
 fn decode(message: &str, shift: i32) -> String {
-    encode(message, -shift)
+    encode(message, 26 - shift.rem_euclid(26))
 }
 
 fn ask(prompt: &str) -> String {
@@ -37,23 +37,37 @@ fn ask(prompt: &str) -> String {
 fn main() {
     println!("=== Caesar Cipher ===");
 
-    let mode = ask("Type 'e' to encode or 'd' to decode:");
-    let message = ask("Enter your message:");
-    let shift_text = ask("Enter the shift number:");
+    loop {
+        println!();
+        let mode = ask("Type 'e' to encode, 'd' to decode, or 'q' to quit:").to_lowercase();
 
-    let shift: i32 = match shift_text.parse() {
-        Ok(number) => number,
-        Err(_) => {
-            println!("That's not a valid number.");
-            return;
+        if mode == "q" {
+            println!("Goodbye!");
+            break;
         }
-    };
 
-    if mode == "e" {
-        println!("Result: {}", encode(&message, shift));
-    } else if mode == "d" {
-        println!("Result: {}", decode(&message, shift));
-    } else {
-        println!("Please type 'e' or 'd'.");
+        if mode != "e" && mode != "d" {
+            println!("Please type 'e', 'd' or 'q'.");
+            continue;
+        }
+
+        let message = ask("Enter your message:");
+        let shift_text = ask("Enter the shift number:");
+
+        let shift: i32 = match shift_text.parse() {
+            Ok(number) => number,
+            Err(_) => {
+                println!("That's not a valid number.");
+                continue;
+            }
+        };
+
+        let result = if mode == "e" {
+            encode(&message, shift)
+        } else {
+            decode(&message, shift)
+        };
+
+        println!("Result: {}", result);
     }
 }
