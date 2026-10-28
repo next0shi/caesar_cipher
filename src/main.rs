@@ -1,3 +1,5 @@
+use std::io;
+
 fn encode(message: &str, shift: i32) -> String {
     let shift = shift.rem_euclid(26) as u8;
     let mut result = String::new();
@@ -23,14 +25,35 @@ fn decode(message: &str, shift: i32) -> String {
     encode(message, -shift)
 }
 
+fn ask(prompt: &str) -> String {
+    println!("{}", prompt);
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read input");
+    input.trim().to_string()
+}
+
 fn main() {
-    let original = "Hello, Rust!";
-    let shift = 3;
+    println!("=== Caesar Cipher ===");
 
-    let encoded = encode(original, shift);
-    let decoded = decode(&encoded, shift);
+    let mode = ask("Type 'e' to encode or 'd' to decode:");
+    let message = ask("Enter your message:");
+    let shift_text = ask("Enter the shift number:");
 
-    println!("Original: {}", original);
-    println!("Encoded:  {}", encoded);
-    println!("Decoded:  {}", decoded);
+    let shift: i32 = match shift_text.parse() {
+        Ok(number) => number,
+        Err(_) => {
+            println!("That's not a valid number.");
+            return;
+        }
+    };
+
+    if mode == "e" {
+        println!("Result: {}", encode(&message, shift));
+    } else if mode == "d" {
+        println!("Result: {}", decode(&message, shift));
+    } else {
+        println!("Please type 'e' or 'd'.");
+    }
 }
