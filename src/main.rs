@@ -1,6 +1,4 @@
-fn main() {
-    let message = "Hello, Rust!";
-    let shift: u8 = 3;
+fn encode(message: &str, shift: u8) -> String {
     let mut result = String::new();
 
     for c in message.chars() {
@@ -17,6 +15,13 @@ fn main() {
         }
     }
 
+    result
+}
+
+fn main() {
+    let message = "Hello, Rust!";
+    let encoded = encode(message, 3);
+
     println!("Original: {}", message);
-    println!("Encoded:  {}", result);
+    println!("Encoded:  {}", encoded);
 }
