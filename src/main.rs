@@ -1,4 +1,5 @@
-fn encode(message: &str, shift: u8) -> String {
+fn encode(message: &str, shift: i32) -> String {
+    let shift = shift.rem_euclid(26) as u8;
     let mut result = String::new();
 
     for c in message.chars() {
@@ -18,10 +19,18 @@ fn encode(message: &str, shift: u8) -> String {
     result
 }
 
-fn main() {
-    let message = "Hello, Rust!";
-    let encoded = encode(message, 3);
+fn decode(message: &str, shift: i32) -> String {
+    encode(message, -shift)
+}
 
-    println!("Original: {}", message);
+fn main() {
+    let original = "Hello, Rust!";
+    let shift = 3;
+
+    let encoded = encode(original, shift);
+    let decoded = decode(&encoded, shift);
+
+    println!("Original: {}", original);
     println!("Encoded:  {}", encoded);
+    println!("Decoded:  {}", decoded);
 }
