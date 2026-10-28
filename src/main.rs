@@ -1,12 +1,22 @@
 fn main() {
-    let letter = 'H';
+    let message = "Hello, Rust!";
     let shift: u8 = 3;
+    let mut result = String::new();
 
-    let number = letter as u8; // 72
-    let position = number - b'A'; // 72 - 65 = 7
-    let new_position = (position + shift) % 26; // (7 + 3) % 26 = 10
-    let new_number = new_position + b'A'; // 10 + 65 = 75
-    let new_letter = new_number as char; // 'K'
+    for c in message.chars() {
+        if c.is_ascii_uppercase() {
+            let position = c as u8 - b'A';
+            let new_position = (position + shift) % 26;
+            result.push((new_position + b'A') as char);
+        } else if c.is_ascii_lowercase() {
+            let position = c as u8 - b'a';
+            let new_position = (position + shift) % 26;
+            result.push((new_position + b'a') as char);
+        } else {
+            result.push(c);
+        }
+    }
 
-    println!("{} shifted by {} becomes {}", letter, shift, new_letter);
+    println!("Original: {}", message);
+    println!("Encoded:  {}", result);
 }
